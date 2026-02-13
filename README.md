@@ -1,5 +1,22 @@
 
+
 # GenAI-Enabled Claim Status API – Project Wiki
+
+## Business Context
+This project addresses the domain of insurance claims processing. In this context, "claims" refer to insurance policy claims that customers file when they experience covered events (such as accidents, property damage, or health issues). The system is designed to:
+
+- Store claim status information in DynamoDB, including claim IDs and current statuses.
+- Store claim notes and documentation in S3, providing detailed information about each claim.
+- Generate AI-powered summaries for multiple stakeholders:
+   - **Overall summary**: Complete claim overview
+   - **Customer summary**: What the policyholder needs to know
+   - **Adjuster summary**: What the insurance adjuster needs to know
+   - **Recommended next step**: Actionable guidance
+- Provide API operations for:
+   - Retrieving claim status (`GET /claims/{id}`)
+   - Generating intelligent summaries using Amazon Bedrock AI (`POST /claims/{id}/summarize`)
+
+The business goal is to streamline and enhance the insurance claims process by combining raw data access with AI-driven insights, enabling insurers to manage, track, and process customer claims more efficiently and transparently for all parties involved.
 
 ## Overview
 This project implements a production-ready, AI-powered claim status API on AWS. It leverages Amazon EKS (Kubernetes), API Gateway, DynamoDB, S3, Lambda, and Amazon Bedrock for GenAI summarization. The architecture is designed for scalability, security, observability, and automated deployment, with a clean separation of concerns and modern cloud-native best practices.
