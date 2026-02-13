@@ -1,0 +1,479 @@
+{
+  "info": {
+    "name": "introspect2B-collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "bruno",
+      "event": []
+    },
+    {
+      "name": "Intr2 B Get claim by ID AAAA",
+      "event": [],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "https://83mbqvr4j7.execute-api.us-east-1.amazonaws.com/prod/claims/claim-123",
+          "protocol": "https",
+          "host": [
+            "83mbqvr4j7",
+            "execute-api",
+            "us-east-1",
+            "amazonaws",
+            "com"
+          ],
+          "path": [
+            "prod",
+            "claims",
+            "claim-123"
+          ],
+          "query": [],
+          "variable": []
+        }
+      }
+    },
+    {
+      "name": "Intr2 B Get claim by ID APIG",
+      "event": [],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "https://ycrok7am4b.execute-api.us-east-1.amazonaws.com/prod/claims/claim-123",
+          "protocol": "https",
+          "host": [
+            "ycrok7am4b",
+            "execute-api",
+            "us-east-1",
+            "amazonaws",
+            "com"
+          ],
+          "path": [
+            "prod",
+            "claims",
+            "claim-123"
+          ],
+          "query": [],
+          "variable": []
+        }
+      }
+    },
+    {
+      "name": "Intr2 B Get claim by ID",
+      "event": [],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "https://c5lfyfg1u7.execute-api.us-east-1.amazonaws.com/prod/claims/claim-124",
+          "protocol": "https",
+          "host": [
+            "c5lfyfg1u7",
+            "execute-api",
+            "us-east-1",
+            "amazonaws",
+            "com"
+          ],
+          "path": [
+            "prod",
+            "claims",
+            "claim-124"
+          ],
+          "query": [],
+          "variable": []
+        }
+      }
+    },
+    {
+      "name": "Intr2 B Get health APIGW",
+      "event": [],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "http://a841c067574ca46629418fbd37b7d2a1-492892219.us-east-1.elb.amazonaws.com/actuator/health",
+          "protocol": "http",
+          "host": [
+            "a841c067574ca46629418fbd37b7d2a1-492892219",
+            "us-east-1",
+            "elb",
+            "amazonaws",
+            "com"
+          ],
+          "path": [
+            "actuator",
+            "health"
+          ],
+          "query": [],
+          "variable": []
+        }
+      }
+    },
+    {
+      "name": "Intr2 B Get health",
+      "event": [],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "http://ac992a63e93484522ab12f9d10156db4-2061111227.us-east-1.elb.amazonaws.com/api/v1/claims/",
+          "protocol": "http",
+          "host": [
+            "ac992a63e93484522ab12f9d10156db4-2061111227",
+            "us-east-1",
+            "elb",
+            "amazonaws",
+            "com"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "claims",
+            ""
+          ],
+          "query": [],
+          "variable": []
+        }
+      }
+    },
+    {
+      "name": "Intr2B Create Claim APIG",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "http://a841c067574ca46629418fbd37b7d2a1-492892219.us-east-1.elb.amazonaws.com/api/v1/claims",
+          "protocol": "http",
+          "host": [
+            "a841c067574ca46629418fbd37b7d2a1-492892219",
+            "us-east-1",
+            "elb",
+            "amazonaws",
+            "com"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "claims"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"claimId\": \"claim-123\",\n  \"customerId\": \"cust-456\",\n  \"status\": \"UNDER_REVIEW\",\n  \"description\": \"Vehicle accident claim\",\n  \"amount\": 5000.00\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Intr2B Create Claim apigw",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "https://5lwckikmki.execute-api.us-east-1.amazonaws.com/prod/claims",
+          "protocol": "https",
+          "host": [
+            "5lwckikmki",
+            "execute-api",
+            "us-east-1",
+            "amazonaws",
+            "com"
+          ],
+          "path": [
+            "prod",
+            "claims"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"claimId\": \"claim-123\",\n  \"customerId\": \"cust-456\",\n  \"status\": \"UNDER_REVIEW\",\n  \"description\": \"Vehicle accident claim\",\n  \"amount\": 5000.00\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Intr2B Create Claim",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8080/api/v1/claims",
+          "protocol": "http",
+          "host": [
+            "localhost:8080"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "claims"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"claimId\": \"claim-124\",\n  \"customerId\": \"cust-456\",\n  \"status\": \"UNDER_REVIEW\",\n  \"description\": \"Vehicle accident claim\",\n  \"amount\": 5000.00\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Intr2B Generate Claim doc APIG",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "http://a841c067574ca46629418fbd37b7d2a1-492892219.us-east-1.elb.amazonaws.com/api/v1/claims/claim-123/generate",
+          "protocol": "http",
+          "host": [
+            "a841c067574ca46629418fbd37b7d2a1-492892219",
+            "us-east-1",
+            "elb",
+            "amazonaws",
+            "com"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "claims",
+            "claim-123",
+            "generate"
+          ],
+          "query": [],
+          "variable": []
+        }
+      }
+    },
+    {
+      "name": "Intr2B Generate Claim doc",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8080/api/v1/claims/claim-124/generate",
+          "protocol": "http",
+          "host": [
+            "localhost:8080"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "claims",
+            "claim-124",
+            "generate"
+          ],
+          "query": [],
+          "variable": []
+        }
+      }
+    },
+    {
+      "name": "Intr2B Summarize Claim doc APIG",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "http://a841c067574ca46629418fbd37b7d2a1-492892219.us-east-1.elb.amazonaws.com/api/v1/claims/claim-123/summarize",
+          "protocol": "http",
+          "host": [
+            "a841c067574ca46629418fbd37b7d2a1-492892219",
+            "us-east-1",
+            "elb",
+            "amazonaws",
+            "com"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "claims",
+            "claim-123",
+            "summarize"
+          ],
+          "query": [],
+          "variable": []
+        }
+      }
+    },
+    {
+      "name": "Intr2B Summarize Claim doc",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8080/api/v1/claims/claim-123/summarize",
+          "protocol": "http",
+          "host": [
+            "localhost:8080"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "claims",
+            "claim-123",
+            "summarize"
+          ],
+          "query": [],
+          "variable": []
+        }
+      }
+    }
+  ],
+  "variable": []
+}

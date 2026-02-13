@@ -1,0 +1,26 @@
+Based on the requirements document in introspect 2, claims refer to insurance claims - specifically, 
+insurance policy claims that customers file when they experience covered events (like accidents, property damage, health issues, etc.).
+
+What Claims Are in This Context:
+From the document, claims are insurance-related records that include:
+
+Claim Status Information - Stored in DynamoDB with details like claim ID and current status
+Claim Notes/Documents - Stored in S3, containing detailed information about the claim
+Multiple Stakeholder Perspectives - The system needs to generate different summaries for:
+Overall summary - Complete claim overview
+Customer summary - What the policyholder needs to know
+Adjuster summary - What the insurance adjuster needs to know
+Recommended next step - Actionable guidance
+API Operations:
+GET /claims/{id} - Retrieves basic claim status from DynamoDB
+POST /claims/{id}/summarize - Uses Amazon Bedrock AI to analyze claim notes from S3 and generate intelligent summaries
+Business Context:
+This appears to be an insurance claims processing system where:
+
+Claims are filed by customers
+Notes and documentation are collected during the claims process
+AI (via Amazon Bedrock) helps summarize complex claim information for different audiences
+The system provides both raw data access and AI-enhanced insights
+The "claims" here are essentially insurance claim records that insurers manage, track, and process - 
+very common in the insurance industry for handling customer claims efficiently.
+

@@ -1,0 +1,33 @@
+terraform import aws_ecr_repository.claims_service introspect2-claims
+
+before service deployment:
+aws eks update-kubeconfig --name introspect2-eks --region us-east-1
+
+aws eks update-kubeconfig --name introspect2-eks --region us-east-1 --profile cna2
+ 
+kubectl get svc claims-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
+
+aws iam attach-role-policy --role-name node-group-eks-node-group-2026020209061956790000000e --policy-arn arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess --profile cna2
+aws iam attach-role-policy --role-name "node-group-eks-node-group-2026020209061956790000000e" --policy-arn arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess --profile cna2
+
+aws iam attach-role-policy --role-name "node-group-eks-node-group-2026020209061956790000000e" --policy-arn arn:aws:iam::aws:policy/AmazonS3FullAccess --profile cna2
+aws iam attach-role-policy --role-name "node-group-eks-node-group-2026020209061956790000000e" --policy-arn arn:aws:iam::aws:policy/AWSLambda_FullAccess --profile cna2
+aws iam attach-role-policy --role-name "node-group-eks-node-group-2026020209061956790000000e" --policy-arn arn:aws:iam::aws:policy/AmazonBedrockFullAccess --profile cna2
+
+
+kubectl logs claims-service-5789684b87-m9x9x --tail=100  
+
+kubectl get pods
+
+kubectl get pods -l app=claims-service
+kubectl logs claims-service-7c8b9ff58b-qxdrz --tail=200
+
+kubectl logs deployment/claims-service --tail=200
+
+kubectl get pods -n <your-namespace>  # Replace with the actual namespace if not default
+kubectl get svc claims-service
+kubectl logs <pod-name>  # To check for any startup errors
+
+kubectl get endpoints claims-service
+NAME             ENDPOINTS                         AGE
+claims-service   10.0.0.119:8080,10.0.1.182:8080   23m
