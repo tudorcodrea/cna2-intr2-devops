@@ -1,0 +1,125 @@
+name: Build and Deploy Claims Service to EKS
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: introspect2-claims
+  EKS_CLUSTER_NAME: introspect2-eks  # From Terraform: ${var.cluster_name}
+  IMAGE_TAG: ${{ github.sha }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+
+    - name: Cache Maven packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+
+    - name: Build with Maven
+      run: mvn clean package -DskipTests
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Ensure ECR repository exists
+      run: |
+        if aws ecr describe-repositories --repository-names "$ECR_REPOSITORY" >/dev/null 2>&1; then
+          echo "Repository exists, ensuring scan on push is enabled"
+          aws ecr put-image-scanning-configuration --repository-name "$ECR_REPOSITORY" --image-scanning-configuration scanOnPush=true
+        else
+          echo "Creating repository with scan on push enabled"
+          aws ecr create-repository --repository-name "$ECR_REPOSITORY" --image-scanning-configuration scanOnPush=true
+        fi
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+
+    - name: Build and push Docker image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+    - name: Wait for ECR image scan to complete
+      run: |
+        IMAGE_URI="${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}"
+        echo "Waiting for ECR scan on $IMAGE_URI"
+        echo "Sleeping 30 seconds to allow scan to register..."
+        sleep 30
+        for i in {1..30}; do
+          SCAN_STATUS=$(aws ecr describe-image-scan-findings --repository-name "$ECR_REPOSITORY" --image-id imageTag="$IMAGE_TAG" --query 'imageScanStatus.status' --output text 2>/dev/null || echo "FAILED")
+          if [ "$SCAN_STATUS" = "COMPLETE" ]; then
+            echo "ECR scan complete"
+            break
+          elif [ "$SCAN_STATUS" = "FAILED" ]; then
+            echo "ECR scan failed, but continuing pipeline."
+            aws ecr describe-image-scan-findings --repository-name "$ECR_REPOSITORY" --image-id imageTag="$IMAGE_TAG" --query 'imageScanStatus' --output json || true
+            break
+          fi
+          echo "Scan status: $SCAN_STATUS, waiting..."
+          sleep 10
+        done
+
+    - name: Fetch ECR scan findings
+      run: |
+        aws ecr describe-image-scan-findings --repository-name "$ECR_REPOSITORY" --image-id imageTag="$IMAGE_TAG" --output json > ecr-scan-results.json
+
+
+    - name: Log scan results to CloudWatch
+      continue-on-error: true
+      run: |
+        LOG_GROUP="/ci/ecr-scan-results"
+        LOG_STREAM="${{ github.run_id }}-${{ github.sha }}"
+        aws logs create-log-group --log-group-name "$LOG_GROUP" 2>/dev/null || true
+        aws logs create-log-stream --log-group-name "$LOG_GROUP" --log-stream-name "$LOG_STREAM" 2>/dev/null || true
+        TIMESTAMP=$(date +%s%3N)
+        LOG_EVENT=$(jq -c . ecr-scan-results.json 2>/dev/null || echo '{"error":"Failed to parse JSON"}')
+        aws logs put-log-events --log-group-name "$LOG_GROUP" --log-stream-name "$LOG_STREAM" --log-events "timestamp=$TIMESTAMP,message=$LOG_EVENT" 2>/dev/null || echo "Failed to log to CloudWatch"
+
+    - name: Upload scan results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: security-scans-${{ github.sha }}
+        path: ecr-scan-results.json
+        retention-days: 30
+
+    - name: Update kubeconfig
+      run: aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
+
+    - name: Deploy to EKS
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        sed -i "s|<ECR_REPOSITORY_URL>|$ECR_REGISTRY/$ECR_REPOSITORY|g" k8s-deployment.yaml
+        sed -i "s|<IMAGE_TAG>|:$IMAGE_TAG|g" k8s-deployment.yaml
+        kubectl apply -f k8s-deployment.yaml
+        kubectl rollout status deployment/claims-service

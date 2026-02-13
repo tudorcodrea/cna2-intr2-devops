@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <!-- JSON Structured Logging Pattern for CloudWatch -->
+    <property name="LOG_PATTERN_JSON"
+              value="{&quot;timestamp&quot;:&quot;%d{yyyy-MM-dd HH:mm:ss.SSS}&quot;,&quot;level&quot;:&quot;%level&quot;,&quot;thread&quot;:&quot;%thread&quot;,&quot;logger&quot;:&quot;%logger&quot;,&quot;message&quot;:&quot;%replace(%message){'&quot;','\&quot;'}&quot;,&quot;exception&quot;:&quot;%replace(%exception){'&quot;','\&quot;'}&quot;}%n"/>
+
+    <!-- Console Appender with JSON format -->
+    <appender name="CONSOLE_JSON" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN_JSON}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Request/Response Tracing Appender -->
+    <appender name="REQUEST_TRACER" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>{&quot;timestamp&quot;:&quot;%d{yyyy-MM-dd HH:mm:ss.SSS}&quot;,&quot;level&quot;:&quot;%level&quot;,&quot;traceId&quot;:&quot;%X{traceId:-}&quot;,&quot;spanId&quot;:&quot;%X{spanId:-}&quot;,&quot;method&quot;:&quot;%X{method:-}&quot;,&quot;url&quot;:&quot;%X{url:-}&quot;,&quot;status&quot;:&quot;%X{status:-}&quot;,&quot;duration&quot;:&quot;%X{duration:-}&quot;,&quot;message&quot;:&quot;%replace(%message){'&quot;','\&quot;'}&quot;}%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Root logger with JSON format -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE_JSON"/>
+    </root>
+
+    <!-- Application specific loggers -->
+    <logger name="com.example.claims" level="DEBUG">
+        <appender-ref ref="CONSOLE_JSON"/>
+    </logger>
+
+    <!-- Request tracing logger -->
+    <logger name="com.example.claims.controller" level="INFO" additivity="false">
+        <appender-ref ref="REQUEST_TRACER"/>
+        <appender-ref ref="CONSOLE_JSON"/>
+    </logger>
+
+    <!-- AWS SDK logging (reduce noise) -->
+    <logger name="software.amazon.awssdk" level="WARN"/>
+    <logger name="org.springframework.web" level="INFO"/>
+</configuration>

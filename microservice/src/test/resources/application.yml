@@ -1,0 +1,18 @@
+spring:
+  profiles:
+    active: test
+
+logging:
+  level:
+    com.example.claims: DEBUG
+
+# Stub AWS config for tests
+aws:
+  region: us-east-1
+  dynamodb:
+    table-name: claims
+  s3:
+    bucket-name: claims-notes-bucket
+  lambda:
+    function-name: claims-summarizer-lambda
+    generate-files-function-name: claim_generate_files

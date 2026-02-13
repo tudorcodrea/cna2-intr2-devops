@@ -1,0 +1,16 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+
+# Local overrides for AWS resources
+aws:
+  region: us-east-1
+  dynamodb:
+    table-name: claims
+  s3:
+    bucket-name: claims-notes-bucket
+  lambda:
+    # Replace ACCOUNT_ID with your AWS account ID if different
+    function-name: arn:aws:lambda:us-east-1:660633971866:function:claims-summarizer-lambda
+    generate-files-function-name: arn:aws:lambda:us-east-1:660633971866:function:claim_generate_files
